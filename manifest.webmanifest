@@ -1,0 +1,22 @@
+{
+  "name": "HSK Reboot — Chinese Character Trainer",
+  "short_name": "HSK Reboot",
+  "description": "Personalized HSK 3 to HSK 4 Chinese character trainer with spaced repetition.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#111827",
+  "icons": [
+    {
+      "src": "icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

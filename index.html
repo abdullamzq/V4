@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111827">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="HSK Reboot">
+  <meta name="description" content="Personalized HSK 3 to HSK 4 Chinese character trainer with spaced repetition.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>HSK Reboot</title>
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">PERSONAL CHINESE TRAINER</div>
+        <h1>HSK Reboot</h1>
+      </div>
+      <div id="saveBadge" class="save-badge" aria-live="polite">Saved ✓</div>
+    </header>
+
+    <main>
+      <section id="screen-home" class="screen active">
+        <div class="hero">
+          <div>
+            <div class="eyebrow">TODAY</div>
+            <h2 id="welcomeLine">Rebuild what you knew. Add what you need.</h2>
+            <p id="trackLabel" class="muted">HSK 3.0 • Levels 1–4</p>
+          </div>
+          <div class="level-orb">
+            <strong id="levelNumber">1</strong>
+            <span>level</span>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <article><span class="stat-number" id="xpValue">0</span><span class="stat-label">XP</span></article>
+          <article><span class="stat-number" id="masteredValue">0</span><span class="stat-label">Mastered</span></article>
+          <article><span class="stat-number" id="dueValue">0</span><span class="stat-label">Due now</span></article>
+          <article><span class="stat-number" id="streakValue">0</span><span class="stat-label">Day streak</span></article>
+        </div>
+
+        <section class="card focus-card">
+          <div class="row between wrap gap">
+            <div>
+              <div class="eyebrow">STUDY MODE</div>
+              <h3>How much time do you have?</h3>
+            </div>
+            <span id="sessionEstimate" class="pill">≈ 45 min</span>
+          </div>
+          <div class="segmented" role="group" aria-label="Study duration">
+            <button class="duration-btn" data-minutes="10">10 min</button>
+            <button class="duration-btn" data-minutes="20">20 min</button>
+            <button class="duration-btn selected" data-minutes="45">45 min</button>
+          </div>
+          <button id="startStudyBtn" class="primary big">Start today's session</button>
+          <button id="startDiagnosticBtn" class="secondary big">Run / redo HSK 1–3 reboot check</button>
+        </section>
+
+        <section class="card">
+          <div class="row between wrap gap">
+            <div>
+              <div class="eyebrow">YOUR MEMORY MAP</div>
+              <h3>Progress</h3>
+            </div>
+            <button id="openProgressBtn" class="text-btn">Details →</button>
+          </div>
+          <div class="progress-track"><div id="masteryBar" class="progress-fill"></div></div>
+          <p id="progressSentence" class="muted small">Loading your vocabulary…</p>
+        </section>
+
+        <section id="dataNotice" class="card notice">
+          <strong>First-time setup</strong>
+          <p class="small muted">The app will download the HSK vocabulary list once, keep a compact copy on your iPad, and then work with your saved progress.</p>
+          <button id="loadDataBtn" class="secondary">Load vocabulary</button>
+          <div id="dataStatus" class="small muted" aria-live="polite"></div>
+        </section>
+      </section>
+
+      <section id="screen-study" class="screen">
+        <div class="row between gap">
+          <button class="back-btn" data-go="home" aria-label="Back">←</button>
+          <div class="session-progress-wrap">
+            <div class="small muted" id="sessionCount">1 / 20</div>
+            <div class="progress-track compact"><div id="sessionBar" class="progress-fill"></div></div>
+          </div>
+          <div id="sessionXp" class="pill">+0 XP</div>
+        </div>
+
+        <article id="studyCard" class="study-card">
+          <div class="row between wrap gap">
+            <span id="cardType" class="pill">REVIEW</span>
+            <span id="hskLevelBadge" class="pill quiet">HSK 1</span>
+          </div>
+
+          <div id="newWordIntro" class="new-word-intro hidden">
+            <div class="eyebrow">NEW WORD</div>
+            <div id="introHanzi" class="hanzi huge">学习</div>
+            <div id="introPinyin" class="pinyin">xuéxí</div>
+            <div id="introMeaning" class="meaning">to study</div>
+            <div id="introRadical" class="component-note"></div>
+            <button id="introHearBtn" class="secondary">🔊 Hear it</button>
+            <button id="learnedBtn" class="primary big">I've got it — quiz me later</button>
+          </div>
+
+          <div id="quizArea">
+            <div class="prompt-label">What does this mean?</div>
+            <div id="quizHanzi" class="hanzi huge">学习</div>
+            <div id="quizPinyin" class="pinyin hidden">xuéxí</div>
+            <div class="row center gap">
+              <button id="hearBtn" class="icon-btn" aria-label="Hear Chinese">🔊 Hear</button>
+              <button id="revealPinyinBtn" class="icon-btn">Show pinyin</button>
+            </div>
+            <div id="answerChoices" class="choices"></div>
+            <div id="answerFeedback" class="feedback" aria-live="polite"></div>
+            <button id="nextBtn" class="primary big hidden">Next</button>
+          </div>
+        </article>
+      </section>
+
+      <section id="screen-diagnostic" class="screen">
+        <div class="row between gap">
+          <button class="back-btn" data-go="home" aria-label="Back">←</button>
+          <div class="session-progress-wrap">
+            <div class="small muted" id="diagCount">1 / 30</div>
+            <div class="progress-track compact"><div id="diagBar" class="progress-fill"></div></div>
+          </div>
+          <span class="pill">Reboot check</span>
+        </div>
+
+        <article class="study-card">
+          <div class="prompt-label">Do you recognize this instantly?</div>
+          <div id="diagHanzi" class="hanzi huge">朋友</div>
+          <div id="diagReveal" class="reveal-box hidden">
+            <div id="diagPinyin" class="pinyin"></div>
+            <div id="diagMeaning" class="meaning"></div>
+          </div>
+          <button id="diagHearBtn" class="secondary">🔊 Hear it</button>
+          <div class="diag-actions">
+            <button class="diag-btn know" data-rating="known">✅ Instant</button>
+            <button class="diag-btn shaky" data-rating="shaky">🤔 Familiar</button>
+            <button class="diag-btn forgot" data-rating="forgot">❌ Forgot</button>
+          </div>
+          <button id="diagRevealBtn" class="text-btn center-btn">Reveal answer</button>
+        </article>
+      </section>
+
+      <section id="screen-progress" class="screen">
+        <div class="row gap">
+          <button class="back-btn" data-go="home" aria-label="Back">←</button>
+          <div>
+            <div class="eyebrow">MEMORY MAP</div>
+            <h2>Your progress</h2>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <article><span id="pNew" class="stat-number">0</span><span class="stat-label">New</span></article>
+          <article><span id="pLearning" class="stat-number">0</span><span class="stat-label">Learning</span></article>
+          <article><span id="pStrong" class="stat-number">0</span><span class="stat-label">Strong</span></article>
+          <article><span id="pMastered" class="stat-number">0</span><span class="stat-label">Mastered</span></article>
+        </div>
+
+        <section class="card">
+          <h3>Level breakdown</h3>
+          <div id="levelBreakdown"></div>
+        </section>
+
+        <section class="card">
+          <h3>Words needing attention</h3>
+          <div id="weakWords" class="word-cloud"></div>
+        </section>
+      </section>
+
+      <section id="screen-settings" class="screen">
+        <div class="row gap">
+          <button class="back-btn" data-go="home" aria-label="Back">←</button>
+          <div>
+            <div class="eyebrow">SETTINGS</div>
+            <h2>Study setup</h2>
+          </div>
+        </div>
+
+        <section class="card">
+          <label for="trackSelect"><strong>Exam vocabulary track</strong></label>
+          <select id="trackSelect">
+            <option value="new">HSK 3.0 (new syllabus)</option>
+            <option value="old">Legacy HSK 2.0</option>
+          </select>
+          <p class="small muted">Each track keeps separate progress.</p>
+        </section>
+
+        <section class="card">
+          <label class="switch-row">
+            <span><strong>Listening-first prompts</strong><br><span class="small muted">Encourages you to use your stronger listening memory.</span></span>
+            <input id="listeningFirstToggle" type="checkbox" checked>
+          </label>
+          <label class="switch-row">
+            <span><strong>Auto-play new words</strong><br><span class="small muted">Uses the iPad's Chinese speech voice when available.</span></span>
+            <input id="autoSpeakToggle" type="checkbox">
+          </label>
+        </section>
+
+        <section class="card">
+          <h3>Backup</h3>
+          <p class="small muted">Your progress saves on this device after every answer. Export a backup occasionally in case browser/app data is cleared.</p>
+          <div class="stack">
+            <button id="exportBtn" class="secondary">Export progress backup</button>
+            <label class="secondary file-label">Import progress backup<input id="importInput" type="file" accept="application/json"></label>
+          </div>
+          <div id="backupStatus" class="small muted" aria-live="polite"></div>
+        </section>
+
+        <section class="card danger-zone">
+          <h3>Reset</h3>
+          <button id="resetProgressBtn" class="danger">Reset progress for current track</button>
+        </section>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Main navigation">
+      <button data-nav="home" class="nav-btn active"><span>⌂</span><small>Home</small></button>
+      <button data-nav="study" class="nav-btn"><span>字</span><small>Study</small></button>
+      <button data-nav="progress" class="nav-btn"><span>◔</span><small>Progress</small></button>
+      <button data-nav="settings" class="nav-btn"><span>⚙</span><small>Settings</small></button>
+    </nav>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
